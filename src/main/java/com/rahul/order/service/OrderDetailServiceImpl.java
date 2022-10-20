@@ -68,9 +68,9 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 		}
 	}
 
-	
-	public void exportPdf(HttpServletResponse response) throws DocumentException, IOException{
-		
+	@Override
+	public void exportPdf(HttpServletResponse response){
+		try {
 		Document d = new Document(PageSize.A4);
 		PdfWriter.getInstance(d, response.getOutputStream());
 		d.open();
@@ -91,6 +91,9 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         pdfTableData(table);
          
         d.add(table);
-        d.close();
+        d.close();}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
