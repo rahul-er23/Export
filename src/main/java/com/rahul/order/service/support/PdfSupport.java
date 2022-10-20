@@ -1,33 +1,26 @@
-package com.rahul.order.service;
+package com.rahul.order.service.support;
 
+import java.awt.Color;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.Color;
-import java.io.IOException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.stereotype.Service;
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.*;
+import com.lowagie.text.Document;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import com.rahul.order.entity.OrderDetail;
-import com.rahul.order.repository.OrderDetailRepository;
 
-@Service
-public class OrderDetailServiceImpl implements OrderDetailService {
-
-	private OrderDetailRepository orderepo;
-
-	@Autowired
-	public OrderDetailServiceImpl(OrderDetailRepository orderepo) {
-		this.orderepo = orderepo;	
-	}
+public class PdfSupport {
+	private List<OrderDetail> listOrders;
+    
+    public PdfSupport(List<OrderDetail> listOrders) {
+        this.listOrders = listOrders;
+    }
 	
-	@Override
-	public List<OrderDetail> getAll() {
-		return orderepo.findAll();
-	}
-
 	public void pdfHeader(PdfPTable table) {
 		PdfPCell cell = new PdfPCell();
 		cell.setBackgroundColor(Color.ORANGE);
@@ -57,7 +50,6 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 	}
 
 	public void pdfTableData(PdfPTable table) {
-		List<OrderDetail> listOrders = getAll();
 		for (OrderDetail order : listOrders) {
 			table.addCell(String.valueOf(order.getId()));
 			table.addCell(String.valueOf(order.getiNumber()));
@@ -68,7 +60,6 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 		}
 	}
 
-	@Override
 	public void exportPdf(HttpServletResponse response){
 		try {
 		Document d = new Document(PageSize.A4);
@@ -95,5 +86,6 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-	}
+	
 }
+	}
