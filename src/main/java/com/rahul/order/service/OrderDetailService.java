@@ -16,5 +16,5 @@ public interface OrderDetailService {
 	public List<OrderDetail> getAll();
 	//public void pdfHeader(PdfPTable table);
 	//public void pdfTableData(PdfPTable table);
-	public void exportPdf(HttpServletResponse response); 
+	//public void exportPdf(HttpServletResponse response); 
 }

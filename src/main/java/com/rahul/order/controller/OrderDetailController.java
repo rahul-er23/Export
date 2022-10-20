@@ -6,7 +6,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
@@ -25,15 +27,16 @@ public class OrderDetailController {
 	private OrderDetailService service;
 
 	@GetMapping("/ExportPDF")
-	public void exportToPdf(HttpServletResponse response) throws DocumentException, IOException {
+	public String exportToPdf(HttpServletResponse response) throws DocumentException, IOException {
 		HttpServletResponse response2 = new FileName().fileN(response, "pdf");
 		List<OrderDetail> listOrders = service.getAll();
 		PdfSupport support = new PdfSupport(listOrders);
 		support.exportPdf(response2);
+		return "index";
 	}
 
 	@GetMapping("/ExportCSV")
-	public void exportToCSV(HttpServletResponse response) throws DocumentException, IOException {
+	public String exportToCSV(HttpServletResponse response) throws DocumentException, IOException {
 		HttpServletResponse response2 = new FileName().fileN(response, "csv");
 		ICsvBeanWriter csvWriter = new CsvBeanWriter(response2.getWriter(), CsvPreference.STANDARD_PREFERENCE);
 		String[] csvHeader = { "Id", "Invoice#", "Name", "Address", "Pincode", "Status" };
@@ -44,13 +47,22 @@ public class OrderDetailController {
 			csvWriter.write(order, nameMapping);
 		}
 		csvWriter.close();
+		return "index";
 	}
 
 	@GetMapping("/ExportExcel")
-	public void exportToExcel(HttpServletResponse response) throws IOException {
+	public String exportToExcel(HttpServletResponse response) throws IOException {
 		HttpServletResponse response2 = new FileName().fileN(response, "excel");
 		List<OrderDetail> listOrders = service.getAll();
 		ExcelSupport excelsupport = new ExcelSupport(listOrders);
 		excelsupport.export(response2);
+		return "index";
 	}
+	
+	@RequestMapping("/index")
+	public String welcome() {
+	 
+	    return "index";
+	}
+	
 }
